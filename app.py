@@ -15,18 +15,16 @@ SETTINGS_FILE = SETTINGS_DIR / "settings.json"
 
 
 def load_settings() -> dict:
-    """Load settings from disk. On first run, migrate API key from .env."""
     if SETTINGS_FILE.exists():
         with open(SETTINGS_FILE) as f:
             return json.load(f)
 
-    # First run: try to import key from the project's .env
+    # First run: migrate API key from .env if present
     env_path = Path(__file__).parent / ".env"
     if env_path.exists():
         try:
             from dotenv import dotenv_values
-            vals = dotenv_values(env_path)
-            key = vals.get("GOOGLE_API_KEY", "")
+            key = dotenv_values(env_path).get("GOOGLE_API_KEY", "")
             if key and key != "your_gemini_api_key_here":
                 return {"api_key": key}
         except Exception:
@@ -48,19 +46,16 @@ class SettingsDialog(ctk.CTkToplevel):
         self.title("Instellingen")
         self.geometry("500x190")
         self.resizable(False, False)
-        self.grab_set()  # modal
+        self.grab_set()
 
         self.result = None
-
         self.grid_columnconfigure(1, weight=1)
 
-        # API key label
         ctk.CTkLabel(
             self, text="Google Gemini API Key:", anchor="w",
             font=ctk.CTkFont(size=13)
         ).grid(row=0, column=0, padx=(24, 10), pady=(32, 8), sticky="w")
 
-        # API key entry (masked)
         self._key_var = ctk.StringVar(value=current_api_key)
         self._key_entry = ctk.CTkEntry(
             self, textvariable=self._key_var,
@@ -68,7 +63,6 @@ class SettingsDialog(ctk.CTkToplevel):
         )
         self._key_entry.grid(row=0, column=1, padx=(0, 10), pady=(32, 8), sticky="ew")
 
-        # Show/hide toggle
         self._show_var = ctk.BooleanVar(value=False)
         ctk.CTkCheckBox(
             self, text="Toon",
@@ -77,14 +71,12 @@ class SettingsDialog(ctk.CTkToplevel):
             width=70
         ).grid(row=0, column=2, padx=(0, 24), pady=(32, 8))
 
-        # Link to get API key
         ctk.CTkLabel(
             self,
             text="Sleutel aanmaken via aistudio.google.com/app/apikey",
             text_color="gray", font=ctk.CTkFont(size=11), anchor="w"
         ).grid(row=1, column=0, columnspan=3, padx=24, sticky="w")
 
-        # Buttons
         btn_frame = ctk.CTkFrame(self, fg_color="transparent")
         btn_frame.grid(row=2, column=0, columnspan=3, pady=(16, 24), padx=24, sticky="e")
 
@@ -117,18 +109,12 @@ class RenamerApp(ctk.CTk):
         self.minsize(540, 500)
 
         self._settings = load_settings()
-        self._init_api_client()
+        meta_module.initialize_client(self._settings.get("api_key", ""))
 
         self._folder = ctk.StringVar(value="")
         self._dry_run = ctk.BooleanVar(value=False)
-        self._running = False
 
         self._build_ui()
-
-    # ── Setup ──────────────────────────────────────────────────────────────
-
-    def _init_api_client(self):
-        meta_module.initialize_client(self._settings.get("api_key", ""))
 
     def _build_ui(self):
         self.grid_columnconfigure(0, weight=1)
@@ -162,12 +148,11 @@ class RenamerApp(ctk.CTk):
             row=1, column=0, sticky="ew", padx=24, pady=18
         )
 
-        # Controls section
+        # Controls
         ctrl = ctk.CTkFrame(self, fg_color="transparent")
         ctrl.grid(row=2, column=0, sticky="ew", padx=24)
         ctrl.grid_columnconfigure(0, weight=1)
 
-        # — Folder picker —
         ctk.CTkLabel(
             ctrl, text="Map selecteren",
             font=ctk.CTkFont(size=14, weight="bold"), anchor="w"
@@ -184,14 +169,12 @@ class RenamerApp(ctk.CTk):
             command=self._pick_folder
         ).grid(row=0, column=0, padx=(0, 12))
 
-        self._folder_label = ctk.CTkLabel(
+        ctk.CTkLabel(
             folder_row, textvariable=self._folder,
             anchor="w", text_color="gray",
             font=ctk.CTkFont(size=12)
-        )
-        self._folder_label.grid(row=0, column=1, sticky="ew")
+        ).grid(row=0, column=1, sticky="ew")
 
-        # — Options —
         ctk.CTkLabel(
             ctrl, text="Opties",
             font=ctk.CTkFont(size=14, weight="bold"), anchor="w"
@@ -204,7 +187,6 @@ class RenamerApp(ctk.CTk):
             font=ctk.CTkFont(size=13)
         ).grid(row=3, column=0, sticky="w", pady=(0, 22))
 
-        # — Start button —
         self._start_btn = ctk.CTkButton(
             ctrl,
             text="▶  Start hernoeming",
@@ -214,7 +196,6 @@ class RenamerApp(ctk.CTk):
         )
         self._start_btn.grid(row=4, column=0, sticky="ew")
 
-        # — Progress bar (hidden by default) —
         self._progress = ctk.CTkProgressBar(ctrl, mode="indeterminate")
         self._progress.grid(row=5, column=0, sticky="ew", pady=(10, 0))
         self._progress.grid_remove()
@@ -258,7 +239,7 @@ class RenamerApp(ctk.CTk):
         if dlg.result is not None:
             self._settings["api_key"] = dlg.result
             save_settings(self._settings)
-            self._init_api_client()
+            meta_module.initialize_client(dlg.result)
             self._log("✓ Instellingen opgeslagen.")
 
     def _start(self):
@@ -277,7 +258,6 @@ class RenamerApp(ctk.CTk):
             )
             return
 
-        # Clear log and start
         self._log_box.configure(state="normal")
         self._log_box.delete("1.0", "end")
         self._log_box.configure(state="disabled")
@@ -358,7 +338,6 @@ class RenamerApp(ctk.CTk):
 
     def _finish(self, status: str = "Klaar"):
         def _update():
-            self._running = False
             self._start_btn.configure(state="normal")
             self._progress.stop()
             self._progress.grid_remove()
@@ -369,7 +348,7 @@ class RenamerApp(ctk.CTk):
 # ── Entry point ────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    ctk.set_appearance_mode("system")   # volgt macOS dark/light mode
+    ctk.set_appearance_mode("system")
     ctk.set_default_color_theme("blue")
     app = RenamerApp()
     app.mainloop()

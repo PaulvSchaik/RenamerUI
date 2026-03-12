@@ -1,26 +1,23 @@
 import fitz  # PyMuPDF
 from google import genai
+from dotenv import load_dotenv
 import json
 import os
-from dotenv import load_dotenv
 
 load_dotenv()
 
-# Initialize Gemini Client
 client = None
+
 
 def initialize_client(api_key: str):
     """Initialize (or re-initialize) the Gemini client with the given API key."""
     global client
-    if api_key:
-        client = genai.Client(api_key=api_key)
-    else:
-        client = None
+    client = genai.Client(api_key=api_key) if api_key else None
 
-# Auto-initialize from .env if key is available
-_env_key = os.getenv("GOOGLE_API_KEY")
-if _env_key:
-    initialize_client(_env_key)
+
+# Auto-initialize from .env if a key is available (useful during development)
+initialize_client(os.getenv("GOOGLE_API_KEY", ""))
+
 
 def extract_text_from_pdf(file_path, max_pages=3):
     """Extracts text from the first few pages of a PDF."""
@@ -33,6 +30,7 @@ def extract_text_from_pdf(file_path, max_pages=3):
     except Exception as e:
         print(f"Error reading PDF {file_path}: {e}")
     return text
+
 
 def get_pdf_metadata(text):
     """Uses Gemini to extract year-month, party, and summary from text."""
@@ -52,17 +50,15 @@ def get_pdf_metadata(text):
     Do not include any other text or markdown formatting in your response.
 
     Text:
-    {text[:4000]}  # Limit text to 4000 characters for efficiency
+    {text[:4000]}
     """
 
     try:
-        # Using gemini-2.5-flash for maximum stability as it is GA in March 2026
         response = client.models.generate_content(
-            model='gemini-2.5-flash',
+            model="gemini-2.5-flash",
             contents=prompt
         )
-        # Clean the response in case LLM adds markdown blocks
-        clean_response = response.text.strip().replace('```json', '').replace('```', '')
+        clean_response = response.text.strip().replace("```json", "").replace("```", "")
         return json.loads(clean_response)
     except Exception as e:
         print(f"Error calling Gemini API: {e}")
