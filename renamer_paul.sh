@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# RenamerPro Personal Launcher (Paul)
-# Dit script start de RenamerPro PDF renamer voor de specifieke OneDrive map.
+# RenamerUI Personal Launcher (Paul)
+# Dit script start de RenamerUI PDF renamer voor de specifieke OneDrive map.
 # Dit bestand is alleen voor lokaal gebruik en wordt niet naar GitHub gepusht.
 
 # Project map
-PROJECT_DIR="/Users/paul/github/RenamerPro"
+PROJECT_DIR="/Users/paul/github/RenamerUI"
 cd "$PROJECT_DIR"
 
 # De doelmap (Inbox)
@@ -23,7 +23,7 @@ if [ ! -d "$INBOX_DIR" ]; then
     exit 1
 fi
 
-echo "[*] Starten van RenamerPro (Watcher) voor de OneDrive Inbox..."
+echo "[*] Starten van RenamerUI (Watcher) voor de OneDrive Inbox..."
 echo "[*] Map: $INBOX_DIR"
 
 # Activeer de venv en start de watcher

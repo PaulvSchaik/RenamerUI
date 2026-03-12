@@ -31,7 +31,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name='RenamerPro',
+    name='RenamerUI',
     debug=False,
     strip=False,
     upx=False,
@@ -46,17 +46,17 @@ coll = COLLECT(
     a.datas,
     strip=False,
     upx=False,
-    name='RenamerPro',
+    name='RenamerUI',
 )
 
 app = BUNDLE(
     coll,
-    name='RenamerPro.app',
+    name='RenamerUI.app',
     icon=None,
     bundle_identifier='nl.paul.renamerPro',
     info_plist={
-        'CFBundleDisplayName': 'RenamerPro',
-        'CFBundleName': 'RenamerPro',
+        'CFBundleDisplayName': 'RenamerUI',
+        'CFBundleName': 'RenamerUI',
         'CFBundleVersion': '1.0.0',
         'CFBundleShortVersionString': '1.0',
         'NSHighResolutionCapable': True,

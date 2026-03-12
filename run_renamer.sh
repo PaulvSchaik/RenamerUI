@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# RenamerPro Launcher
-# Dit script start de RenamerPro PDF renamer automatisch in de juiste omgeving.
+# RenamerUI Launcher
+# Dit script start de RenamerUI PDF renamer automatisch in de juiste omgeving.
 
 # Bepaal de map waar dit script staat
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -41,6 +41,6 @@ if [ $# -eq 0 ]; then
 fi
 
 # Start het programma in de venv
-echo "[*] RenamerPro wordt gestart..."
+echo "[*] RenamerUI wordt gestart..."
 source venv/bin/activate
 python3 renamer.py "$@"

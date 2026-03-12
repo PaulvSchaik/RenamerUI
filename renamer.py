@@ -57,7 +57,7 @@ class PDFHandler(FileSystemEventHandler):
             self.process_file(event.dest_path)
 
 def main():
-    parser = argparse.ArgumentParser(description="RenamerPro: AI-Powered PDF Renamer")
+    parser = argparse.ArgumentParser(description="RenamerUI: AI-Powered PDF Renamer")
     parser.add_argument("--watch", help="Directory to monitor for new PDF files")
     parser.add_argument("--once", help="Process all existing PDF files in this directory once")
     parser.add_argument("--dry-run", action="store_true", help="Show what would happen without renaming")

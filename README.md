@@ -1,6 +1,6 @@
-# RenamerPro
+# RenamerUI
 
-RenamerPro is een intelligent script dat PDF bestanden automatisch hernoemt op basis van de inhoud.
+RenamerUI is een intelligent script dat PDF bestanden automatisch hernoemt op basis van de inhoud.
 
 ## Hoe het werkt
 1. Het script leest de eerste paar pagina's van een PDF bestand.

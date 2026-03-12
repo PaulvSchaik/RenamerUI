@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# RenamerPro Personal Launcher (Paul) - ONE-SHOT
+# RenamerUI Personal Launcher (Paul) - ONE-SHOT
 # Dit script scant de OneDrive inbox ÉÉN keer en stopt daarna.
 # Dit bestand is alleen voor lokaal gebruik en wordt niet naar GitHub gepusht.
 
 # Project map
-PROJECT_DIR="/Users/paul/github/RenamerPro"
+PROJECT_DIR="/Users/paul/github/RenamerUI"
 cd "$PROJECT_DIR"
 
 # De doelmap (Inbox)
@@ -23,7 +23,7 @@ if [ ! -d "$INBOX_DIR" ]; then
     exit 1
 fi
 
-echo "[*] Starten van RenamerPro (Eenmalige scan) voor de OneDrive Inbox..."
+echo "[*] Starten van RenamerUI (Eenmalige scan) voor de OneDrive Inbox..."
 echo "[*] Map: $INBOX_DIR"
 
 # Activeer de venv en start de scan

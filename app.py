@@ -10,7 +10,7 @@ from metadata import extract_text_from_pdf, get_pdf_metadata
 from utils import format_filename, rename_file
 
 # ── Settings persistence (macOS convention) ────────────────────────────────────
-SETTINGS_DIR = Path.home() / "Library" / "Application Support" / "RenamerPro"
+SETTINGS_DIR = Path.home() / "Library" / "Application Support" / "RenamerUI"
 SETTINGS_FILE = SETTINGS_DIR / "settings.json"
 
 
@@ -112,7 +112,7 @@ class SettingsDialog(ctk.CTkToplevel):
 class RenamerApp(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.title("RenamerPro")
+        self.title("RenamerUI")
         self.geometry("660x580")
         self.minsize(540, 500)
 
@@ -140,7 +140,7 @@ class RenamerApp(ctk.CTk):
         header.grid_columnconfigure(0, weight=1)
 
         ctk.CTkLabel(
-            header, text="RenamerPro",
+            header, text="RenamerUI",
             font=ctk.CTkFont(size=24, weight="bold")
         ).grid(row=0, column=0, sticky="w")
 
