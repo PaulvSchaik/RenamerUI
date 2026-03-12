@@ -1,0 +1,22 @@
+# API keys en omgevingsvariabelen — NOOIT committen
+.env
+
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# PyInstaller build output
+build/
+dist/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Claude Code interne bestanden
+.claude/
