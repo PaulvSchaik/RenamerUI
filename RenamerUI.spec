@@ -57,8 +57,8 @@ app = BUNDLE(
     info_plist={
         'CFBundleDisplayName': 'RenamerUI',
         'CFBundleName': 'RenamerUI',
-        'CFBundleVersion': '1.0.0',
-        'CFBundleShortVersionString': '1.0',
+        'CFBundleVersion': '1.1.0',
+        'CFBundleShortVersionString': '1.1',
         'NSHighResolutionCapable': True,
         'NSRequiresAquaSystemAppearance': False,   # dark mode support
         'LSMinimumSystemVersion': '12.0',

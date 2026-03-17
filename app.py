@@ -5,6 +5,7 @@ import os
 import json
 from pathlib import Path
 
+import re
 import metadata as meta_module
 from metadata import extract_text_from_pdf, get_pdf_metadata
 from utils import format_filename, rename_file
@@ -288,9 +289,17 @@ class RenamerApp(ctk.CTk):
 
         renamed = 0
         failed = 0
+        skipped = 0
+        _already_named = re.compile(r'^\d{4}-\d{2} - .+ - .+\.pdf$')
 
         for filename in pdf_files:
             file_path = os.path.join(folder, filename)
+
+            if _already_named.match(filename):
+                self._log(f"\n⏭  {filename}\n   —  al correct opgemaakt, overgeslagen")
+                skipped += 1
+                continue
+
             self._log(f"\n⟳  {filename}")
 
             text = extract_text_from_pdf(file_path)
@@ -320,9 +329,9 @@ class RenamerApp(ctk.CTk):
 
         self._log(f"\n{'─' * 60}")
         if dry_run:
-            summary = f"Dry-run voltooid — {len(pdf_files)} bestand(en) geanalyseerd"
+            summary = f"Dry-run voltooid — {len(pdf_files) - skipped} geanalyseerd, {skipped} overgeslagen"
         else:
-            summary = f"Klaar — {renamed} hernoemd, {failed} mislukt"
+            summary = f"Klaar — {renamed} hernoemd, {skipped} overgeslagen, {failed} mislukt"
         self._log(f"✓  {summary}")
         self._finish(summary)
 
