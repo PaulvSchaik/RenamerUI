@@ -53,7 +53,7 @@ app = BUNDLE(
     coll,
     name='RenamerUI.app',
     icon=None,
-    bundle_identifier='nl.paul.renamerPro',
+    bundle_identifier='nl.paul.renamerUI',
     info_plist={
         'CFBundleDisplayName': 'RenamerUI',
         'CFBundleName': 'RenamerUI',
